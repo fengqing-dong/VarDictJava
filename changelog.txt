@@ -1,0 +1,130 @@
+Version 1.8.3
+    - Updated submodule and version.
+    - Fixed check for introns for the case when deletion is next to insertion.
+    - Added PSTD flag description.
+    - Update Readme.md
+    - Updated changelog.txt
+    - Update Readme.md
+    - Updated integration tests to vcf 4.2
+    - Updated changelog.txt
+    - Updated version.
+    - Added validation of VCF files in integration tests. Fixed flag InDelLikely name in expected file and duplicated Bias filter. Updated submodule.
+    - Updated changelog.txt
+    - add conda and usegalaxy badge
+    - Updated submodule
+    - Removed updated comment
+    - Added fixes to integration tests due to changes in option M in Perl var2vcf_paired.pl.
+    - Added update for pileup amplicon references (only amplicon as somatic and simple are counted correctly) using reference result.
+    - Fixed type for variant in case when ref==alt (for pileup mode).
+    - Updated submodule.
+    - Fix for issue 283. Skip complex adjusting for H bases.
+    - Added constants.
+    - Updated submodule.
+    - Renaming.
+    - Added fix for #285: fill few reference fields to be available in pileup.
+    - Added fix for #288: factor for adjusting of qualities.
+    - Update HTSJDK to a more modern version and fix a typo.
+    - Added docs for fisher test (MLE algorithm). Added version of VarDict to expected files in integration test.
+    - Refactoring of printer variants for simplicity.
+    - Added integration test for fisher option (compare with epsilon value). Fixed scientific notation of numbers in expected VCF.
+    - Added option --fisher: EXPERIMENTAL FEATURE for Fisher test in Java (to exclude slow R step). Uniroot solver implemented from C version of zeroin.
+    - Fixes in documentation: deleted -z option from example (not useful in this case) and added explanation about BED format usage.
+    - Updated test case for mm10 in pileup mode and rebased.
+    - Added fix for issue 265: missed position when insertion/complex occurs
+    - Added fix for issue 272: case when end and start of cluster are equal led to zero deletion exception.
+    - Added IUPAC ambuguity codes fix in REF for complex/deletions .
+    - Added validation of reference allele.
+    - Added NM tag for STAR aligner: if nM is presented, it will be used.
+    - Fixed issue 268: added check for length of query quality sequence to skip very short strings in SV analysis.
+
+Version 1.8.2
+    - Update Readme.md
+    - Updated integration tests to vcf 4.2
+
+Version 1.8.1
+    - Updated version.
+    - Added validation of VCF files in integration tests. Fixed flag InDelLikely name in expected file and duplicated Bias filter. Updated submodule.
+
+Version 1.8
+    - add conda and usegalaxy badge
+    - Updated submodule
+    - Removed updated comment
+    - Added fixes to integration tests due to changes in option M in Perl var2vcf_paired.pl.
+    - Added update for pileup amplicon references (only amplicon as somatic and simple are counted correctly) using reference result.
+    - Fixed type for variant in case when ref==alt (for pileup mode).
+    - Updated submodule.
+    - Fix for issue 283. Skip complex adjusting for H bases.
+    - Added constants.
+    - Updated submodule.
+    - Renaming.
+    - Added fix for #285: fill few reference fields to be available in pileup.
+    - Added fix for #288: factor for adjusting of qualities.
+    - Update HTSJDK to a more modern version and fix a typo.
+    - Added docs for fisher test (MLE algorithm). Added version of VarDict to expected files in integration test.
+    - Refactoring of printer variants for simplicity.
+    - Added integration test for fisher option (compare with epsilon value). Fixed scientific notation of numbers in expected VCF.
+    - Added option --fisher: EXPERIMENTAL FEATURE for Fisher test in Java (to exclude slow R step). Uniroot solver implemented from C version of zeroin.
+    - Fixes in documentation: deleted -z option from example (not useful in this case) and added explanation about BED format usage.
+    - Updated test case for mm10 in pileup mode and rebased.
+    - Added fix for issue 265: missed position when insertion/complex occurs
+    - Added fix for issue 272: case when end and start of cluster are equal led to zero deletion exception.
+    - Added IUPAC ambuguity codes fix in REF for complex/deletions .
+    - Added validation of reference allele.
+    - Added NM tag for STAR aligner: if nM is presented, it will be used.
+    - Fixed issue 268: added check for length of query quality sequence to skip very short strings in SV analysis.
+
+Version 1.7.0
+    - Project updated
+    - Project updated
+    - Project updated
+    - Added distribution files
+    - Update version number
+    - Fixed issue with AMP in allele: hicnt and hicov for many insertions and SV were changed. Total coverage for part of the insertion changed. Added changes for chimeric reads in modify cigar part.
+    - Typo fixes
+    - Fix in description of alleles length filter
+    - Added explanation for bias flag
+    - Fixed inaccuracy in docs
+    - Updated changelog for 1.6.0 version
+    - Added commit and push for modified changelog.txt
+    - Added creation of release notes in release script.
+    - Fixed case when deletion can appear next to hard clip after modifying CIGAR.
+    - Added Trusty to Travis so oracleJdk8 will work.
+    - Fix Readme for -O option
+    - Fix for frequency. Test added.
+    - Fix README typos, grammar and markup.
+    - VCF updated to 4.3. specification version. MQ changed to Integer, AF field to A, BIAS contains 2 numbers.
+    - Also fixed one discrepancy in old part of cigar modifying for 2 insertions.
+    - Fixed issue 243. Cigar modify for 3 indels in case when match on reference if with a big deletion.
+    - Oracle JDK 12 in travis removes, added as openjdk 12
+    - Oracle JDK 12 in travis
+    - Added skipping of adaptor sequences at the end of chromosome.
+    - Added test case with artificial data.
+    - Fixed reference bases at the end of reference.
+    - Readme updated.
+    - Added options for non-monomer (--nmfreq) and monomer (--mfreq) frequency thresholds.
+    - Project updated
+    - Added VCF tests for simple and somatic modes.
+
+Version 1.6.0
+	- Fixed REF allele for DEL SV: in cases when reference allele length is more than 1 base REF was not the first base in SV region, but the last one.
+	- Fixed genotype field: it could be displayed incorrectly (parts of genotype from different variants united) when several variants appear on one position (i.e. multiallelic). Now genotype is created for each variant separately.
+	- Fixed bug in the paired mode for multiallelic case: if the first variant was filtered out, the next variant skipped. Now next variants are checked also.
+	- Fixed bug when insertion skipped if the only insertion appears on position (and no "refvariant", very rare case in realignment).
+	- Fixed CIGAR modifying in three indels case and in case of possible softclips.
+	- Changed multiplication factor for MAPQ, QUAL and PMEAN field in the realignment of insertions, so now they don't change if the variant coverage wasn't changed by adjustment.
+	- Added additional sorts in algorithm parts for both Perl and Java versions in places that showed non-deterministic behavior: adjustment of MNP, realignment of insertions and deletions, the order of variants processed before output, softclips combining in consensus. 
+	- Added loading the extended part of the reference when DEL SV with discordant pairs is calling (new DEL SV can appear after this change because now these regions also checked).
+	- Extended the algorithm for insertions in less than vext lenth before matched regions.
+	- Added CRISPR, adaptor options and fasta default paths (the same as in Perl version).
+	- Added SNV adjustment changes after SV calling made by Zhongwu.
+	- Refactoring of VarDict classes and methods structure.
+
+Version 1.4
+	- Fixed error #15 and improved local realignment 
+
+Version 1.3
+
+	- Increased the size of the heap by default to 8g in start script
+	- Added last Zhongwu's improvements in variant amplicon
+	- Fixed a bug: Option 'I' had a wrong type
+	- Fixed issue #13: Added command-line option 'VS'
