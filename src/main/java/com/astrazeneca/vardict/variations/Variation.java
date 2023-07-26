@@ -108,6 +108,10 @@ public class Variation {
         Map<String, Integer> singleReadKey = new TreeMap<>();
         Map<String, Integer> pairedReadKey = new TreeMap<>();
         String key;
+        //  skip  if varsCounts is empty
+        if (varsCounts == null || varsCounts.size() == 0){
+            return;
+        }
         for (Map.Entry<String, List<VarsCount>> entry : varsCounts.entrySet()) {
             List<VarsCount> reads = new ArrayList<>();
             reads = entry.getValue();

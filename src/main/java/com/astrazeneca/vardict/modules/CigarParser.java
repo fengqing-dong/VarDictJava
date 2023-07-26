@@ -1738,7 +1738,12 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
         int mate_start = record.getMateAlignmentStart();
         int var_start =  record.getAlignmentStart();
         int var_end = record.getAlignmentEnd();
-        Cigar mateCigar = TextCigarCodec.decode(record.getAttribute("MC").toString());
+        Cigar mateCigar;
+        if (record.getAttribute("MC") == null){
+            mateCigar = record.getCigar();
+        }else{
+            mateCigar = TextCigarCodec.decode(record.getAttribute("MC").toString());
+        }
         int mate_end = mate_start + getAlignedLength(mateCigar) - 1;
         VarsCount varsCount = new VarsCount();
         varsCount.readName = record.getReadName();
