@@ -103,7 +103,6 @@ public class ToVarsBuilder implements Module<RealignedVariationData, AlignedVars
                 if (varsAtCurPosition.isEmpty() && !getInsertionVariants().containsKey(position)) {
                     continue;
                 }
-
                 //Skip if there are no structural variants on position or if the delete duplication option is on
                 if (varsAtCurPosition.sv == null || instance().conf.deleteDuplicateVariants) {
                     //Skip if start position is outside region of interest
@@ -432,6 +431,7 @@ public class ToVarsBuilder implements Module<RealignedVariationData, AlignedVars
             if (cnt.varsCount == 0) { //Skip variant if it does not have count
                 continue;
             }
+            cnt.updateVarDupOrPaired();
             //count of variants in forward strand
             int fwd = cnt.getDir(false);
             //count of variants in reverse strand
@@ -478,6 +478,7 @@ public class ToVarsBuilder implements Module<RealignedVariationData, AlignedVars
             tvref.hicnt = hicnt;
             tvref.hicov = hicov;
             tvref.duprate = duprate;
+            tvref.dup_paired_info = cnt.paired + "|" + cnt.single + "|" + cnt.dup_paired + "|" + cnt.uniq_paired + "|" + cnt.dup_single + "|" + cnt.uniq_single;
 
             //append variant record
             var.add(tvref);

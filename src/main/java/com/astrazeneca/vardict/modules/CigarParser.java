@@ -8,6 +8,7 @@ import com.astrazeneca.vardict.data.scopedata.VariationData;
 import com.astrazeneca.vardict.variations.Mate;
 import com.astrazeneca.vardict.variations.Sclip;
 import com.astrazeneca.vardict.variations.Variation;
+import com.astrazeneca.vardict.variations.VarsCount;
 import htsjdk.samtools.*;
 
 import java.time.LocalDateTime;
@@ -74,6 +75,7 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
      */
     @Override
     public Scope<VariationData> process(Scope<RecordPreprocessor> scope) {
+        // scope.data.currentReader.read()
         RecordPreprocessor processor = scope.data;
         initFromScope(scope);
 
@@ -83,6 +85,7 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
         }
 
         SAMRecord record;
+        // 读取每条reads
         while ((record = processor.nextRecord()) != null) {
             try {
                 parseCigar(getChrName(scope.region), record);
@@ -138,6 +141,7 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
         variationData.svStructures = getSVStructures();
         variationData.duprate = duprate;
 
+        // 输出
         return new Scope<>(
                 scope.bam,
                 scope.region,
@@ -282,7 +286,10 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
             position = record.getAlignmentStart();
             cigar = record.getCigar();
         }
-
+        // System.err.printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+        // System.err.printf("%s\t%s\tNM:%s\t%d\n", record.getReadName(), 
+        // record.getCigarString(),
+        // record.getIntegerAttribute(SAMTag.NM.name()).toString() , record.getAlignmentStart());
         cleanupCigar(record);
         //adjusted start position
         start = position;
@@ -585,7 +592,7 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
                     if (pos >= region.start && pos <= region.end && !s.contains("N")) {
                         addVariationForMatchingPart(mappingQuality, numberOfMismatches,
                                 direction, readLengthIncludeMatchingAndInsertions, nmoff, s, startWithDeletion,
-                                q, qbases, qibases, ddlen, pos);
+                                q, qbases, qibases, ddlen, pos, record);
                     }
                 }
 
@@ -1139,6 +1146,10 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
                             // Had to reset the start due to softclipping adjustment
                             start = position;
                             if (instance().conf.y) {
+                                        System.err.printf("1++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+        System.err.printf("%s\t%s\tNM:%s\t%d\n", record.getReadName(), 
+        record.getCigarString(),
+        record.getIntegerAttribute(SAMTag.NM.name()).toString() , record.getAlignmentStart());
                                 System.err.println(sequence + " at 5' is a chimeric at "
                                         + start + " by SEED " + Configuration.SEED_1);
                             }
@@ -1220,6 +1231,10 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
                             // Had to reset the start due to softclipping adjustment
                             start = position;
                             if (instance().conf.y) {
+                                        System.err.printf("2++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+        System.err.printf("%s\t%s\tNM:%s\t%d\n", record.getReadName(), 
+        record.getCigarString(),
+        record.getIntegerAttribute(SAMTag.NM.name()).toString() , record.getAlignmentStart());
                                 System.err.println(sequence  + " at 3' is a chimeric at "
                                         + start + " by SEED " + Configuration.SEED_1);
                             }
@@ -1674,7 +1689,7 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
     private void addVariationForMatchingPart(int mappingQuality, int nm, boolean dir,
                                                     int rlen1, int nmoff, String s,
                                                     boolean startWithDelition, double q,
-                                                    int qbases, int qibases, int ddlen, int pos) {
+                                                    int qbases, int qibases, int ddlen, int pos, SAMRecord record) {
         Variation hv;
         if (s.startsWith("+")) {
             increment(positionToInsertionCount, pos, s);
@@ -1685,7 +1700,11 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
                 //add variant record for s to mnp
                 increment(mnp, pos, s);
             }
+            // variant 实例, 并向scopenonInsertionVariants中记录
             hv = getVariation(nonInsertionVariants, pos, s); //reference to variant structure
+        }
+        if (hv.varsCounts == null){
+            hv.varsCounts = new HashMap<String,List<VarsCount>>();
         }
         hv.incDir(dir);
 
@@ -1715,6 +1734,27 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
         hv.pp = tp;
         hv.pq = q;
         hv.numberOfMismatches += nm - nmoff;
+        Boolean isDuplicate = record.getDuplicateReadFlag();
+        int mate_start = record.getMateAlignmentStart();
+        int var_start =  record.getAlignmentStart();
+        int var_end = record.getAlignmentEnd();
+        Cigar mateCigar = TextCigarCodec.decode(record.getAttribute("MC").toString());
+        int mate_end = mate_start + getAlignedLength(mateCigar) - 1;
+        VarsCount varsCount = new VarsCount();
+        varsCount.readName = record.getReadName();
+        varsCount.varStart = var_start;
+        varsCount.varEnd = var_end;
+        varsCount.varMateStart = mate_start;
+        varsCount.varMateEnd = mate_end;
+        varsCount.isDup = isDuplicate;
+        // add varsCount to hv.varsCounts
+        if (hv.varsCounts.containsKey(varsCount.readName)){
+            hv.varsCounts.get(varsCount.readName).add(varsCount);
+        }else{
+            List<VarsCount> varsCounts = new ArrayList<VarsCount>();
+            varsCounts.add(varsCount);
+            hv.varsCounts.put(varsCount.readName,varsCounts);
+        }
         if (q >= instance().conf.goodq) {
             hv.highQualityReadsCount++;
         } else {

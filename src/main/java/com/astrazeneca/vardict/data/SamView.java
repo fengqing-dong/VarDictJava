@@ -15,7 +15,7 @@ public class SamView implements AutoCloseable {
 
     private SAMRecordIterator iterator;
     private int filter;
-
+    // 使用samtools的 来创建SamReader
     public SamView(String file, String samfilter, Region region, ValidationStringency stringency) {
         iterator = fetchReader(file, stringency)
                 .queryOverlapping(region.chr, region.start, region.end);

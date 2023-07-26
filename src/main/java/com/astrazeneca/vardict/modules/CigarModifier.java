@@ -99,6 +99,7 @@ public class CigarModifier {
                            querySequence = substr(querySequence, cigarElement);
                            queryQuality = substr(queryQuality, cigarElement);
                            if (instance().conf.y) {
+                             System.err.println("4+++++++++++++++");
                                System.err.println(sequence + " at 5' is a chimeric at "
                                        + position + " by SEED " + Configuration.SEED_2);
                            }
@@ -121,6 +122,7 @@ public class CigarModifier {
                             querySequence = substr(querySequence, 0, querySequence.length() - cigarElement);
                             queryQuality = substr(queryQuality, 0, queryQuality.length() - cigarElement);
                             if (instance().conf.y) {
+                                System.err.println("3+++++++++++++++");
                                 System.err.println(sequence + " at 3' is a chimeric at "
                                         + position + " by SEED " + Configuration.SEED_2);
                             }

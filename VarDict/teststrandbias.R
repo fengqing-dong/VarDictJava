@@ -10,8 +10,9 @@ if (length(myinput) > 0 ){
     mynumcols = 0
     d = matrix(0,0,0)
 }
-if (mynumcols == 34 || mynumcols == 36 || mynumcols == 38){ # 34 columns for standard bed files (pre VarDictJava 1.5.5), 36 for VarDictJava >=1.5.5, 38 for amplicon mode
-    d <- read.table( textConnection(myinput), sep = "\t", header = F, comment.char = "", colClasses=c("character", NA, NA, NA, NA, "character", "character", NA, NA, NA, NA, NA, NA, "character", NA, NA, NA, NA, NA, NA, NA, NA), col.names=c(1:mynumcols))
+# 1.8.4 增加 dup_paired_info行
+if (mynumcols == 34 + 1 || mynumcols == 36+1 || mynumcols == 38+1){ # 34 columns for standard bed files (pre VarDictJava 1.5.5), 36 for VarDictJava >=1.5.5, 38 for amplicon mode
+    d <- read.table( textConnection(myinput), sep = "\t", header = F, comment.char = "", colClasses=c("character", NA, NA, NA, NA, "character", "character", NA, NA, NA, NA, NA, NA, "character", NA, NA, NA, NA, NA, NA, NA, NA, "character"), col.names=c(1:mynumcols))
 } else if (mynumcols > 0){
     stop("Incorrect input detected in teststrandbias.R")
 }

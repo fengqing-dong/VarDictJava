@@ -73,6 +73,8 @@ public class RecordPreprocessor {
         if (currentReader != null) {
             currentReader.close();
         }
+        //  使用samtools读取的bam对象
+        // currentReader.read()  每次返回reads
         currentReader = new SamView(bams.pollLast(), instance().conf.samfilter, region, instance().conf.validationStringency);
 
         //$dup contains already seen reads. For each seen read dup contains either POS-RNEXT-PNEXT or POS-CIGAR

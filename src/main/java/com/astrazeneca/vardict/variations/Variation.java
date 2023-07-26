@@ -1,5 +1,11 @@
 package com.astrazeneca.vardict.variations;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import com.astrazeneca.vardict.variations.VarsCount;
 /**
  * Intermediate variant structure
  */
@@ -64,6 +70,19 @@ public class Variation {
      */
     public int pp;
 
+    // 定义突变的结构体
+    public int dup_paired = 0;
+    public int dup_single = 0;
+    public int uniq_paired = 0;
+    public int uniq_single = 0;
+    public int paired = 0;
+    public int single = 0;
+
+    // public List<VarsCount> varsCounts;
+
+    //  定义hashmap
+    public Map<String,  List<VarsCount>> varsCounts;
+
     /**
      * Base quality for previous instance of this variant (used for qstd)  $pq
      */
@@ -85,6 +104,52 @@ public class Variation {
             this.varsCountOnForward++;
     }
 
+    public void updateVarDupOrPaired() {
+        Map<String, Integer> singleReadKey = new TreeMap<>();
+        Map<String, Integer> pairedReadKey = new TreeMap<>();
+        String key;
+        for (Map.Entry<String, List<VarsCount>> entry : varsCounts.entrySet()) {
+            List<VarsCount> reads = new ArrayList<>();
+            reads = entry.getValue();
+            if (reads.size() == 2){
+                this.paired++;
+                VarsCount var1 = reads.get(0);
+                VarsCount var2 = reads.get(1);
+                if (var1.varStart >= var2.varStart){
+                    key = var1.varStart + "_" + var1.varEnd + "_" + var2.varStart + "_" + var2.varEnd;
+                }else{
+                    key = var2.varStart + "_" + var2.varEnd + "_" + var1.varStart + "_" + var1.varEnd;
+                }
+              if (!pairedReadKey.containsKey(key)){
+                    pairedReadKey.put(key, 1);
+                }else{
+                   pairedReadKey.put(key, pairedReadKey.get(key) + 1); 
+                }
+            }else{
+                this.single++;
+                key = reads.get(0).varStart + "_" + reads.get(0).varEnd;
+                if (!singleReadKey.containsKey(key)){
+                    singleReadKey.put(key, 1);
+                }else{
+                   singleReadKey.put(key, singleReadKey.get(key) + 1); 
+                }
+            }
+        }
+        for (Map.Entry<String, Integer> entry1 : singleReadKey.entrySet()) {
+            if (entry1.getValue() == 1){
+                this.uniq_single++;
+            }else{
+                this.dup_single++;
+            }
+        }
+        for (Map.Entry<String, Integer> entry1 : pairedReadKey.entrySet()) {
+            if (entry1.getValue() == 1){
+                this.uniq_paired++;
+            }else{
+                this.dup_paired++;
+            }
+        }
+    }
     /**
      * Decrement count for direction
      * @param dir false for forward strand, true for reverse strand

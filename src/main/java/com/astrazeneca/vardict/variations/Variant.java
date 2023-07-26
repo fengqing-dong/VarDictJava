@@ -189,6 +189,8 @@ public class Variant {
      */
     public int crispr;
 
+    public String dup_paired_info;
+    
     /**
      * A variant is considered noise if the quality is below <code>goodq</code> and
      * there're no more than 3 reads
@@ -406,6 +408,7 @@ public class Variant {
                 ", vartype='" + vartype + '\'' +
                 ", crispr='" + crispr + '\'' +
                 ", DEBUG='" + DEBUG + '\'' +
+                ", dup_paired_info='" + dup_paired_info + '\'' +
                 '}';
     }
 }

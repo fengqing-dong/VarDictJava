@@ -42,6 +42,8 @@ public class SimpleOutputVariant extends OutputVariant {
     private double pvalue;
     private String oddratio = "0";
 
+    private String dup_paired_info = "0|0|0|0";
+
     public SimpleOutputVariant(Variant variant, Region region, String sv, int position) {
         this.sample = instance().sample;
         this.gene = region.gene;
@@ -84,6 +86,7 @@ public class SimpleOutputVariant extends OutputVariant {
             this.duprate = variant.duprate;
             this.crispr = variant.crispr;
             this.DEBUG = variant.DEBUG;
+            this.dup_paired_info = variant.dup_paired_info;
         }
 
         if (instance().conf.fisher) {
@@ -173,7 +176,8 @@ public class SimpleOutputVariant extends OutputVariant {
                 region,
                 varType,
                 getRoundedValueToPrint("0.00", duprate),
-                sv
+                sv,
+                dup_paired_info
         );
         return outputVariant;
     }
@@ -221,7 +225,8 @@ public class SimpleOutputVariant extends OutputVariant {
                 region,
                 varType,
                 duprate == 0 ? 0 : new DecimalFormat("0.0").format(duprate),
-                sv
+                sv,
+                dup_paired_info
         );
         return outputVariant;
     }

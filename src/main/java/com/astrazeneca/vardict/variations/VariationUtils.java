@@ -421,6 +421,7 @@ public class VariationUtils {
      * @param descriptionString string contains information about variation (length and type of variation)
      * @return variation
      */
+    // 创建突变， 添加至hash中
     public static Variation getVariation(Map<Integer, VariationMap<String, Variation>> hash,
                                          int start,
                                          String descriptionString) {

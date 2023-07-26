@@ -88,6 +88,7 @@ print <<VCFHEADER;
 ##INFO=<ID=SVTYPE,Number=1,Type=String,Description="SV type: INV DUP DEL INS FUS">
 ##INFO=<ID=SVLEN,Number=1,Type=Integer,Description="The length of SV in bp">
 ##INFO=<ID=DUPRATE,Number=1,Type=Float,Description="Duplication rate in fraction">
+##INFO=<ID=DUP_PAIRED_INFO,Number=.,Type=String,Description="paired|single|dup_paired|uniq_paried|dup_single|uniq_single">
 ##FILTER=<ID=q$qmean,Description="Mean Base Quality Below $qmean">
 ##FILTER=<ID=Q$Qmean,Description="Mean Mapping Quality Below $Qmean">
 ##FILTER=<ID=p$Pmean,Description="Mean Position in Reads Less than $Pmean">
@@ -232,7 +233,7 @@ foreach my $chr (@chrs) {
 
 	    my $ampinfo = $isamp ? ";GDAMP=$gamp;TLAMP=$tamp;NCAMP=$ncamp;AMPFLAG=$ampflag" : "";
 	    my $dupinfo = $isamp ? "" : (defined($gamp) ? ";DUPRATE=$gamp" : "");
-	    my $crispr = $isamp ? "" : (defined($ncamp) ? ";CRISPR=$ncamp" : "");
+	    my $crispr = $isamp ? "" : (defined($ncamp) ? ";DUP_PAIRED_INFO=$ncamp" : "");
 	    ($pinfo1, $pfilter, $pinfo2) = (join("\t", $chr, $start, ".", $ref, $alt, $QUAL), $filter, join("\t", "SAMPLE=$sample_nowhitespace;TYPE=$type;DP=$dp$END;VD=$vd;AF=$af;BIAS=$bias;REFBIAS=$rfwd:$rrev;VARBIAS=$vfwd:$vrev;PMEAN=$pmean;PSTD=$pstd;QUAL=$qual;QSTD=$qstd;SBF=$sbf;ODDRATIO=$oddratio;MQ=$mapq;SN=$sn;HIAF=$hiaf;ADJAF=$adjaf;SHIFT3=$shift3;MSI=$msi;MSILEN=$msilen;NM=$nm;HICNT=$hicnt;HICOV=$hicov;LSEQ=$lseq;RSEQ=$rseq$ampinfo$dupinfo$crispr$SVINFO", "GT:DP:VD:AD:AF:RD:ALD", "$gt:$dp:$vd:$ad:$af:$rfwd,$rrev:$vfwd,$vrev"));
 	    ($pds, $pde) = ($start+1, $end) if ($type eq "Deletion" && $filter eq "PASS" );
 	    ($pis, $pie) = ($start-1, $end+1) if ($type eq "Insertion" && $filter eq "PASS" );
