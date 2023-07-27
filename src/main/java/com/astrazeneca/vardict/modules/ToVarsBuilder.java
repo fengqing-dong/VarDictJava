@@ -332,6 +332,10 @@ public class ToVarsBuilder implements Module<RealignedVariationData, AlignedVars
                 }
                 // String n = entV.getKey();
                 Variation cnt = insertionVariations.get(descriptionString);
+                if (cnt.varsCount == 0) { //Skip variant if it does not have count
+                    continue;
+                }
+                cnt.updateVarDupOrPaired();
                 //count of variants in forward strand
                 int fwd = cnt.getDir(false);
                 //count of variants in reverse strand
@@ -395,6 +399,8 @@ public class ToVarsBuilder implements Module<RealignedVariationData, AlignedVars
                 tvref.hicnt = hicnt;
                 tvref.hicov = hicov;
                 tvref.duprate = duprate;
+                tvref.dup_paired_info = cnt.paired + "|" + cnt.single + "|" + cnt.dup_paired + "|" + cnt.uniq_paired + "|" + cnt.dup_single + "|" + cnt.uniq_single;
+
 
                 var.add(tvref);
                 if (instance().conf.debug) {

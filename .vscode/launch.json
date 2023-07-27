@@ -13,8 +13,13 @@
             "projectName": "VarDict",
             // "args": ["-G","/mnt/Taurus/private/fengqing/databases/human/genecode/GRCh38/Release41/GRCh38.p13.genome.fa","-N","LibSH23CDx002D0006","-b","a2.bam","-f","0.005","-r","3","-P","5","-o","2","-c","1","-S","2","-E","3","-g","4","-z","-B","2","-v","-m","4","-X","10","-th","1","-3","--nosv","-q","10","-Q","30","--amplicon","50:0.95","all.hg38.sort.bed"],
             // "args":["-G","/mnt/Taurus/private/fengqing/databases/human/genecode/GRCh38/Release41/GRCh38.p13.genome.fa","-N","L23014020CF","-b","/mnt/Taurus/private/fengqing/temp/vardict_test/a2.bam","-I","50","-L","50","-U","-f","0.005","-r","3","-P","5","-o","2","-q","25","-O","30","-c","1","-S","2","-E","3","-g","4","-z","0","-B","2","-v","-m","4","-X","2","-th","3","-3","--nosv","-k","0","-h","-F","0x304","/mnt/Taurus/private/fengqing/temp/vardict_test/ALK.bed"],
-            "args":["-G","/mnt/Taurus/private/fengqing/databases/human/genecode/GRCh38/Release41/GRCh38.p13.genome.fa","-N","L23014020CF","-b","/mnt/Taurus/private/fengqing/temp/vardict_test/a3.bam","-I","50","-L","50","-U","-f","0.005","-r","3","-P","5","-o","2","-q","25","-O","30","-c","1","-S","2","-E","3","-g","4","-z","0","-B","2","-v","-m","4","-X","2","-th","1","-3","--nosv","-k","0","-h","-F","0x304","/mnt/Taurus/private/fengqing/temp/vardict_test/a3.bed"],
-            
+            // snv
+            // "args":["-G","/mnt/Taurus/private/fengqing/databases/human/genecode/GRCh38/Release41/GRCh38.p13.genome.fa","-N","L23014020CF","-b","/mnt/Taurus/private/fengqing/temp/vardict_test/a4.bam","-I","50","-L","50","-U","-f","0.005","-r","3","-P","5","-o","2","-q","25","-O","30","-c","1","-S","2","-E","3","-g","4","-z","0","-B","2","-v","-m","4","-X","2","-th","3","-3","--nosv","-k","0","-h","-F","0x304","/mnt/Taurus/private/fengqing/temp/vardict_test/a4.bed"],
+            // ins
+            // "args":["-G","/mnt/Taurus/private/fengqing/databases/human/genecode/GRCh38/Release41/GRCh38.p13.genome.fa","-N","L23014020CF","-b","/mnt/Taurus/private/fengqing/temp/vardict_test/ins.bam","-I","50","-L","50","-U","-f","0.005","-r","3","-P","5","-o","2","-q","25","-O","30","-c","1","-S","2","-E","3","-g","4","-z","0","-B","2","-v","-m","4","-X","2","-th","3","-3","--nosv","-k","0","-h","-F","0x304","/mnt/Taurus/private/fengqing/temp/vardict_test/ins.bed"],
+
+            // del
+            "args":["-G","/mnt/Taurus/private/fengqing/databases/human/genecode/GRCh38/Release41/GRCh38.p13.genome.fa","-N","L23014020CF","-b","/mnt/Taurus/private/fengqing/temp/vardict_test/del.bam","-I","50","-L","50","-U","-f","0.005","-r","3","-P","5","-o","2","-q","25","-O","30","-c","1","-S","2","-E","3","-g","4","-z","0","-B","2","-v","-m","4","-X","2","-th","3","-3","--nosv","-k","0","-h","-F","0x304","/mnt/Taurus/private/fengqing/temp/vardict_test/del.bed"],
             "console": "integratedTerminal",
             "cwd":"/mnt/Taurus/private/fengqing/temp/vardict_test"
         }

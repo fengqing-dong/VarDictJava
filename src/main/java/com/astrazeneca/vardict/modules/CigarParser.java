@@ -10,6 +10,7 @@ import com.astrazeneca.vardict.variations.Sclip;
 import com.astrazeneca.vardict.variations.Variation;
 import com.astrazeneca.vardict.variations.VarsCount;
 import htsjdk.samtools.*;
+import htsjdk.samtools.filter.SamRecordFilter;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -361,13 +362,13 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
                 case I: { // Insertion
                     offset = 0;
                     ci = processInsertion(querySequence, mappingQuality, ref, queryQuality, numberOfMismatches,
-                            direction, position, readLengthIncludeMatchingAndInsertions, ci);
+                            direction, position, readLengthIncludeMatchingAndInsertions, ci, record);
                     continue;
                 }
                 case D: { // Deletion
                     offset = 0;
                     ci = processDeletion(querySequence, mappingQuality, ref, queryQuality, numberOfMismatches,
-                            direction, readLengthIncludeMatchingAndInsertions, ci);
+                            direction, readLengthIncludeMatchingAndInsertions, ci, record);
                     continue;
                 }
                 default:
@@ -657,7 +658,7 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
      */
     private int processDeletion(String querySequence, int mappingQuality, Map<Integer, Character> ref,
                                 String queryQuality, int numberOfMismatches, boolean direction,
-                                int readLengthIncludeMatchingAndInsertions, int ci) {
+                                int readLengthIncludeMatchingAndInsertions, int ci, SAMRecord record) {
         // Ignore deletions right after introns at exon edge in RNA-seq
         if (skipIndelNextToIntron(cigar, ci)) {
             readPositionExcludingSoftClipped += cigarElementLength;
@@ -845,7 +846,7 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
         if (start >= region.start && start <= region.end) {
             addVariationForDeletion(mappingQuality,
                     numberOfMismatches, direction, readLengthIncludeMatchingAndInsertions,
-                    descStringOfDeletedElement, qualityOfSegment, nmoff);
+                    descStringOfDeletedElement, qualityOfSegment, nmoff, record);
         }
 
         //adjust reference position by offset + multoffs
@@ -904,7 +905,7 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
      */
     private int processInsertion(String querySequence, int mappingQuality, Map<Integer, Character> ref,
                                  String queryQuality, int numberOfMismatches, boolean direction, int position,
-                                 int readLengthIncludeMatchingAndInsertions, int ci) {
+                                 int readLengthIncludeMatchingAndInsertions, int ci,  SAMRecord record) {
         // Ignore insertions right after introns at exon edge in RNA-seq
         if (skipIndelNextToIntron(cigar, ci)) {
             readPositionIncludingSoftClipped += cigarElementLength;
@@ -1026,6 +1027,7 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
             //add insertion to table of variations
             Variation hv = getVariation(insertionVariants, insertionPosition, "+" + descStringOfInsertionSegment); //variant structure for this insertion
             hv.incDir(direction);
+            updateHv(hv, record);
             //add count
             hv.varsCount++;
             //minimum of positions from start of read and end of read
@@ -1087,6 +1089,7 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
                 //Add one more variant corresponding to base at start - 1 to hash
                 Variation ttref = getVariation(nonInsertionVariants, insertionPosition, ref.get(insertionPosition).toString());
                 ttref.incDir(direction);
+                updateHv(ttref, record);
                 ttref.varsCount++;
                 ttref.pstd = hv.pstd;
                 ttref.qstd = hv.qstd;
@@ -1703,9 +1706,7 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
             // variant 实例, 并向scopenonInsertionVariants中记录
             hv = getVariation(nonInsertionVariants, pos, s); //reference to variant structure
         }
-        if (hv.varsCounts == null){
-            hv.varsCounts = new HashMap<String,List<VarsCount>>();
-        }
+        updateHv(hv, record);
         hv.incDir(dir);
 
         //increment count
@@ -1734,6 +1735,35 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
         hv.pp = tp;
         hv.pq = q;
         hv.numberOfMismatches += nm - nmoff;
+
+        if (q >= instance().conf.goodq) {
+            hv.highQualityReadsCount++;
+        } else {
+            hv.lowQualityReadsCount++;
+        }
+        int shift = (s.startsWith("+") && s.contains("&")) ? 1 : 0;
+
+        //increase coverage for bases covered by the variation
+        for (int qi = 1; qi <= qbases - shift; qi++) {
+            incCnt(refCoverage, start - qi + 1, 1);
+        }
+
+        //If variation starts with a deletion ('-' character)
+        if (startWithDelition) {
+            //add variation to deletions map
+            increment(positionToDeletionCount, pos, s);
+
+            //increase coverage for next CIGAR segment
+            for (int qi = 1; qi < ddlen; qi++) {
+                incCnt(refCoverage, start + qi, 1);
+            }
+        }
+    }
+
+    private void updateHv(Variation hv, SAMRecord record){
+        if (hv.varsCounts == null){
+            hv.varsCounts = new HashMap<String,List<VarsCount>>();
+        }
         Boolean isDuplicate = record.getDuplicateReadFlag();
         int mate_start = record.getMateAlignmentStart();
         int var_start =  record.getAlignmentStart();
@@ -1760,40 +1790,18 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
             varsCounts.add(varsCount);
             hv.varsCounts.put(varsCount.readName,varsCounts);
         }
-        if (q >= instance().conf.goodq) {
-            hv.highQualityReadsCount++;
-        } else {
-            hv.lowQualityReadsCount++;
-        }
-        int shift = (s.startsWith("+") && s.contains("&")) ? 1 : 0;
-
-        //increase coverage for bases covered by the variation
-        for (int qi = 1; qi <= qbases - shift; qi++) {
-            incCnt(refCoverage, start - qi + 1, 1);
-        }
-
-        //If variation starts with a deletion ('-' character)
-        if (startWithDelition) {
-            //add variation to deletions map
-            increment(positionToDeletionCount, pos, s);
-
-            //increase coverage for next CIGAR segment
-            for (int qi = 1; qi < ddlen; qi++) {
-                incCnt(refCoverage, start + qi, 1);
-            }
-        }
     }
-
     /**
      * Creates variation for deletion in Cigar (D). If variation already exists, increment it's counters
      */
     private void addVariationForDeletion(int mappingQuality, int nm, boolean dir, int rlen1,
-                                         StringBuilder descStringOfDeletedElement, StringBuilder qualityOfSegment, int nmoff) {
+                                         StringBuilder descStringOfDeletedElement, StringBuilder qualityOfSegment, int nmoff, SAMRecord record) {
         //add variant structure for deletion at this position
         Variation hv = getVariation(nonInsertionVariants, start, descStringOfDeletedElement.toString()); //variation structure
         //add record for deletion in deletions map
         increment(positionToDeletionCount, start, descStringOfDeletedElement.toString());
         hv.incDir(dir);
+        updateHv(hv, record);
         //increase count
         hv.varsCount++;
 
