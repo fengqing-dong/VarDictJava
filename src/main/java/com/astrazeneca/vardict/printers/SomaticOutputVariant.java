@@ -59,6 +59,8 @@ public class SomaticOutputVariant extends OutputVariant {
     private double var2nm;
     private double var2duprate;
     private String var2sv = "0";
+    private String var1dup_paired_info = "0|0|0|0";
+    private String var2dup_paired_info = "0|0|0|0";
 
     private String varLabel = "";
 
@@ -107,6 +109,7 @@ public class SomaticOutputVariant extends OutputVariant {
             this.var1extraFrequency = tumorVariant.extraFrequency;
             this.var1nm = tumorVariant.numberOfMismatches;
             this.var1duprate = tumorVariant.duprate;
+            this.var1dup_paired_info = tumorVariant.dup_paired_info;
         }
 
         if (normalVariant != null) {
@@ -129,6 +132,7 @@ public class SomaticOutputVariant extends OutputVariant {
             this.var2extraFrequency = normalVariant.extraFrequency;
             this.var2nm = normalVariant.numberOfMismatches;
             this.var2duprate = normalVariant.duprate;
+            this.var2dup_paired_info = normalVariant.dup_paired_info;
         }
 
         this.varLabel = varLabel;
@@ -268,7 +272,9 @@ public class SomaticOutputVariant extends OutputVariant {
                 getRoundedValueToPrint("0.0", var2duprate),
                 var2sv,
                 getRoundedValueToPrint("0.00000", pvalue),
-                oddratio
+                oddratio,
+                var1dup_paired_info,
+                var2dup_paired_info
         );
         return outputVariant;
     }
@@ -335,7 +341,9 @@ public class SomaticOutputVariant extends OutputVariant {
                 var1duprate == 0 ? 0 : new DecimalFormat("0.0").format(var1duprate),
                 var1sv,
                 var2duprate == 0 ? 0 : new DecimalFormat("0.0").format(var2duprate),
-                var2sv
+                var2sv,
+                var1dup_paired_info,
+                var2dup_paired_info
         );
         return outputVariant;
     }
