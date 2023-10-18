@@ -135,12 +135,12 @@ public class SomaticOutputVariant extends OutputVariant {
             this.var2dup_paired_info = normalVariant.dup_paired_info;
         }
 
-        // if (this.var2dup_paired_info == null) {
-        //     this.var2dup_paired_info = "0|0|0|0|0|0";
-        // }
-        // if (this.var1dup_paired_info == null) {
-        //     this.var1dup_paired_info = "0|0|0|0|0|0";
-        // }
+        if (this.var2dup_paired_info == null) {
+            this.var2dup_paired_info = "0|0|0|0|0|0";
+        }
+        if (this.var1dup_paired_info == null) {
+            this.var1dup_paired_info = "0|0|0|0|0|0";
+        }
 
         this.varLabel = varLabel;
         this.region = region.chr + ":" + region.start + "-" + region.end;
