@@ -59,8 +59,8 @@ public class SomaticOutputVariant extends OutputVariant {
     private double var2nm;
     private double var2duprate;
     private String var2sv = "0";
-    private String var1dup_paired_info = "0|0|0|0";
-    private String var2dup_paired_info = "0|0|0|0";
+    private String var1dup_paired_info = "0|0|0|0|0|0";
+    private String var2dup_paired_info = "0|0|0|0|0|0";
 
     private String varLabel = "";
 
@@ -134,6 +134,13 @@ public class SomaticOutputVariant extends OutputVariant {
             this.var2duprate = normalVariant.duprate;
             this.var2dup_paired_info = normalVariant.dup_paired_info;
         }
+
+        // if (this.var2dup_paired_info == null) {
+        //     this.var2dup_paired_info = "0|0|0|0|0|0";
+        // }
+        // if (this.var1dup_paired_info == null) {
+        //     this.var1dup_paired_info = "0|0|0|0|0|0";
+        // }
 
         this.varLabel = varLabel;
         this.region = region.chr + ":" + region.start + "-" + region.end;

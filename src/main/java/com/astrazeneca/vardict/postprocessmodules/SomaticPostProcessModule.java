@@ -68,6 +68,7 @@ public class SomaticPostProcessModule implements BiConsumer<Scope<AlignedVarsDat
         List<Integer> variantPositions = new ArrayList<>(allPositions);
         Collections.sort(variantPositions);
         int lastPosition = 0;
+        // 对配对样中的变异进行分析，输出变异结果, 在此debug!!!
         for (Integer position : variantPositions) {
             try {
                 lastPosition = position;
@@ -177,6 +178,7 @@ public class SomaticPostProcessModule implements BiConsumer<Scope<AlignedVarsDat
             } else { // sample 1 only, should be strong somatic
                 Variant varForPrint = new Variant();
                 if (!v2.variants.isEmpty()) {
+                    // v2有突变，但是与与v1的突变不一样，为啥直接选择第一个?
                     Variant v2r = getVarMaybe(v2, var, 0);
                     int tcov = v2r != null && v2r.totalPosCoverage != 0 ? v2r.totalPosCoverage : 0;
                     int rfc = v2r != null && v2r.refForwardCoverage != 0 ? v2r.refForwardCoverage : 0;
@@ -184,8 +186,11 @@ public class SomaticPostProcessModule implements BiConsumer<Scope<AlignedVarsDat
                     varForPrint.totalPosCoverage = tcov;
                     varForPrint.refForwardCoverage = rfc;
                     varForPrint.refReverseCoverage = rrc;
+                    varForPrint.dup_paired_info = "0|0|0|0|0|0";
                 } else if (v2.referenceVariant != null) {
                     varForPrint = v2.referenceVariant;
+                    // 避免将v2.referenceVariant的dup_paired_info输出为配对样中该突变的dup_paired_info，故将其置为0
+                    varForPrint.dup_paired_info = "0|0|0|0|0|0";
                 } else {
                     varForPrint = null;
                 }
