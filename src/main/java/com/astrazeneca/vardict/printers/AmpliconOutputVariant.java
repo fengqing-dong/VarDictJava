@@ -44,6 +44,7 @@ public class AmpliconOutputVariant extends OutputVariant {
 
     private double pvalue;
     private String oddratio = "0";
+    private String dup_paired_info = "0|0|0|0|0|0";
 
     public AmpliconOutputVariant(Variant variant, Region region, List<Tuple.Tuple2<Variant, String>> goodVariants,
                                  List<Tuple.Tuple2<Variant, String>> badVariants, int position, int gvscnt,
@@ -91,6 +92,7 @@ public class AmpliconOutputVariant extends OutputVariant {
             this.totalVariantsCount = gvscnt + badVariants.size();
             this.noCoverage = noCov;
             this.ampliconFlag = flag ? 1 : 0;
+            this.dup_paired_info = variant.dup_paired_info;
             if (!goodVariants.isEmpty()) {
                 this.region = goodVariants.get(0)._2;
             } else {
@@ -195,7 +197,8 @@ public class AmpliconOutputVariant extends OutputVariant {
                 goodVariantsCount,
                 totalVariantsCount,
                 noCoverage,
-                ampliconFlag
+                ampliconFlag,
+                dup_paired_info
         );
         return outputVariant;
     }
@@ -244,7 +247,8 @@ public class AmpliconOutputVariant extends OutputVariant {
                 goodVariantsCount,
                 totalVariantsCount,
                 noCoverage,
-                ampliconFlag
+                ampliconFlag,
+                dup_paired_info
         );
         return outputVariant;
     }
