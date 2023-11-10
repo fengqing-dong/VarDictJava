@@ -61,6 +61,7 @@ public class AmpliconMode extends AbstractMode {
                 Scope<InitialData> initialScope = new Scope<>(instance().conf.bam.getBam1(), region,
                         tryToGetReference(region), referenceResource, 0, splice,
                         variantPrinter, new InitialData());
+                // 执行突变检测流程
                 CompletableFuture<Scope<AlignedVarsData>> pipeline = pipeline(initialScope,
                         new DirectThreadExecutor());
 

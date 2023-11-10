@@ -153,6 +153,7 @@ public class Variation {
                 this.dup_paired++;
             }
         }
+        this.varsCounts = null;
     }
     /**
      * Decrement count for direction

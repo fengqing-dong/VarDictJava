@@ -142,6 +142,7 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
         variationData.svStructures = getSVStructures();
         variationData.duprate = duprate;
 
+        // todo 在此处将每个var中的varscounts清空
         // 输出
         return new Scope<>(
                 scope.bam,
@@ -169,10 +170,20 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
     }
 
     public Map<Integer, VariationMap<String, Variation>> getNonInsertionVariants() {
+        for ( VariationMap<String, Variation> entH : nonInsertionVariants.values()) {
+            for (Variation var : entH.values()){
+                var.updateVarDupOrPaired();
+            }
+        }
         return nonInsertionVariants;
     }
 
     public Map<Integer, VariationMap<String, Variation>> getInsertionVariants() {
+        for ( VariationMap<String, Variation> entH : insertionVariants.values()) {
+            for (Variation var : entH.values()){
+                var.updateVarDupOrPaired();
+            }
+        }
         return insertionVariants;
     }
 

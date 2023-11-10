@@ -335,7 +335,7 @@ public class ToVarsBuilder implements Module<RealignedVariationData, AlignedVars
                 if (cnt.varsCount == 0) { //Skip variant if it does not have count
                     continue;
                 }
-                cnt.updateVarDupOrPaired();
+                // cnt.updateVarDupOrPaired();
                 //count of variants in forward strand
                 int fwd = cnt.getDir(false);
                 //count of variants in reverse strand
@@ -437,7 +437,7 @@ public class ToVarsBuilder implements Module<RealignedVariationData, AlignedVars
             if (cnt.varsCount == 0) { //Skip variant if it does not have count
                 continue;
             }
-            cnt.updateVarDupOrPaired();
+            // cnt.updateVarDupOrPaired();
             //count of variants in forward strand
             int fwd = cnt.getDir(false);
             //count of variants in reverse strand

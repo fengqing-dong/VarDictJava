@@ -29,7 +29,7 @@
             // "args":["-G","/mnt/Taurus/private/fengqing/databases/human/genecode/GRCh38/Release41/GRCh38.p13.genome.fa","-N","T430V208|T430V206","-b","/mnt/Taurus/private/fengqing/temp/test_paired/tumor.bam|/mnt/Taurus/private/fengqing/temp/test_paired/normal.bam","-f", "0.01", "-r", "2", "-P", "5", "-o", "2", "-q", "25", "-O", "30", "-L", "101", "-I", "101", "-k", "0", "-c", "1", "-S", "2", "-E", "3", "-g", "4", "-z", "-B", "2", "-v", "-m", "4", "-th", "1", "-3", "--nosv", "-F", "0x304","/mnt/Taurus/private/fengqing/temp/test_paired/region.bed"],
 
             "cwd":"/mnt/Taurus/private/fengqing/run/panel/HRD/test_pipe_data2/work/c5/1257fad23782128e27bfe74e48702c",
-            "args":["-G","/mnt/Taurus/private/fengqing/databases/human/genecode/GRCh38/Release41/GRCh38.p13.genome.fa","-N","L23042M002GS","-b","FBXW7.bam","-f","0.0001","-r","3","-P","5","-o","2","-c","1","-S","2","-E","3","-g","4","-z","-B","2","-v","-m","4","-X","10","-th","1","-3","--nosv","-q","15","-Q","30","--amplicon","10:0.95","-F","0x304","tmp.bed",""],
+            "args":["-G","/mnt/Taurus/private/fengqing/databases/human/genecode/GRCh38/Release41/GRCh38.p13.genome.fa","-N","L23042M002GS","-b","FBXW7.bam","-f","0.0001","-r","3","-P","5","-o","2","-c","1","-S","2","-E","3","-g","4","-z","-B","2","-v","-k","0","-m","4","-X","10","-th","1","-3","--nosv","-y","-q","15","-Q","30","--amplicon","10:0.95","-F","0x304","tmp.bed",""],
         }
     ]
 } 

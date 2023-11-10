@@ -41,6 +41,8 @@ public abstract class AbstractMode {
      * @param executor current Executor for parallel/single mode
      * @return object contains map of aligned variants
      */
+    
+    // initialDataScope  全局变量在一下各个函数这个通讯
     public CompletableFuture<Scope<AlignedVarsData>> pipeline(Scope<InitialData> initialDataScope,
                                                                      Executor executor) {
         return CompletableFuture.supplyAsync(
