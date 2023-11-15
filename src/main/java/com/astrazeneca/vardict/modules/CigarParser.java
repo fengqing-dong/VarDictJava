@@ -87,9 +87,14 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
 
         SAMRecord record;
         // 读取每条reads
+        int i = 0;
         while ((record = processor.nextRecord()) != null) {
             try {
+                if ( i % 100000 == 0){
+                    System.err.printf("TIME: Start parsing SAM:" + i + "\n");
+                }
                 parseCigar(getChrName(scope.region), record);
+                i++;
             } catch (Exception exception) {
                 printExceptionAndContinue(exception, "record", record.getReadName(), scope.region);
             }
@@ -1787,19 +1792,19 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
         }
         int mate_end = mate_start + getAlignedLength(mateCigar) - 1;
         VarsCount varsCount = new VarsCount();
-        varsCount.readName = record.getReadName();
+        // varsCount.readName = record.getReadName();
         varsCount.varStart = var_start;
         varsCount.varEnd = var_end;
-        varsCount.varMateStart = mate_start;
-        varsCount.varMateEnd = mate_end;
-        varsCount.isDup = isDuplicate;
+        // varsCount.varMateStart = mate_start;
+        // varsCount.varMateEnd = mate_end;
+        // varsCount.isDup = isDuplicate;
         // add varsCount to hv.varsCounts
-        if (hv.varsCounts.containsKey(varsCount.readName)){
-            hv.varsCounts.get(varsCount.readName).add(varsCount);
+        if (hv.varsCounts.containsKey(record.getReadName())){
+            hv.varsCounts.get(record.getReadName()).add(varsCount);
         }else{
             List<VarsCount> varsCounts = new ArrayList<VarsCount>();
             varsCounts.add(varsCount);
-            hv.varsCounts.put(varsCount.readName,varsCounts);
+            hv.varsCounts.put(record.getReadName(),varsCounts);
         }
     }
     /**

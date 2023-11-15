@@ -78,7 +78,6 @@ public class Variation {
     public int paired = 0;
     public int single = 0;
 
-    // public List<VarsCount> varsCounts;
 
     //  定义hashmap
     public Map<String,  List<VarsCount>> varsCounts;
