@@ -10,7 +10,7 @@ bam2=/mnt/Taurus/private/fengqing/run/panel/HRD/test_pipe/alignment/T430V206.mar
 # chr1	46248523
 # chr3	124605586
 chrom=chr1
-pos=20965680
+pos=4174745
 start=$((${pos}-100))
 end=$((${pos}+100))
 

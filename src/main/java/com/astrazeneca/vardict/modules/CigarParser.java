@@ -87,14 +87,14 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
 
         SAMRecord record;
         // 读取每条reads
-        int i = 0;
+        // int i = 0;
         while ((record = processor.nextRecord()) != null) {
             try {
-                if ( i % 100000 == 0){
-                    System.err.printf("TIME: Start parsing SAM:" + i + "\n");
-                }
+                // if ( i % 100000 == 0){
+                //     System.err.printf("TIME: Start parsing SAM:" + i + "\n");
+                // }
                 parseCigar(getChrName(scope.region), record);
-                i++;
+                // i++;
             } catch (Exception exception) {
                 printExceptionAndContinue(exception, "record", record.getReadName(), scope.region);
             }
@@ -1722,7 +1722,10 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
             // variant 实例, 并向scopenonInsertionVariants中记录
             hv = getVariation(nonInsertionVariants, pos, s); //reference to variant structure
         }
+        boolean flag = !reference.referenceSequences.get(pos).toString().equals(s);
+        if (flag){
         updateHv(hv, record);
+        }
         hv.incDir(dir);
 
         //increment count
@@ -1784,13 +1787,13 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
         int mate_start = record.getMateAlignmentStart();
         int var_start =  record.getAlignmentStart();
         int var_end = record.getAlignmentEnd();
-        Cigar mateCigar;
-        if (record.getAttribute("MC") == null){
-            mateCigar = record.getCigar();
-        }else{
-            mateCigar = TextCigarCodec.decode(record.getAttribute("MC").toString());
-        }
-        int mate_end = mate_start + getAlignedLength(mateCigar) - 1;
+        // Cigar mateCigar;
+        // if (record.getAttribute("MC") == null){
+        //     mateCigar = record.getCigar();
+        // }else{
+        //     mateCigar = TextCigarCodec.decode(record.getAttribute("MC").toString());
+        // }
+        // int mate_end = mate_start + getAlignedLength(mateCigar) - 1;
         VarsCount varsCount = new VarsCount();
         // varsCount.readName = record.getReadName();
         varsCount.varStart = var_start;

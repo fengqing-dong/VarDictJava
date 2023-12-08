@@ -111,7 +111,7 @@ public class SomaticMode extends AbstractMode {
         CompletableFuture<Scope<AlignedVarsData>> bam1VariationsFuture = pipeline(initialScope1, new DirectThreadExecutor());
 
         Scope<AlignedVarsData> bam1Variations = bam1VariationsFuture.join();
-
+        // 配对样本在此处进行突变检测
         Scope<InitialData> initialScope2 = new Scope<>(
                 instance().conf.bam.getBam2(),
                 region, ref, referenceResource,
