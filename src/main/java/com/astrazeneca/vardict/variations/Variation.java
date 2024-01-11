@@ -77,6 +77,8 @@ public class Variation {
     public int uniq_single = 0;
     public int paired = 0;
     public int single = 0;
+    public int F1R2 = 0;
+    public int F2R1 = 0;
 
 
     //  定义hashmap
@@ -113,10 +115,11 @@ public class Variation {
         }
         for (Map.Entry<String, List<VarsCount>> entry : varsCounts.entrySet()) {
             List<VarsCount> reads = new ArrayList<>();
+            VarsCount var1;
             reads = entry.getValue();
             if (reads.size() == 2){
                 this.paired++;
-                VarsCount var1 = reads.get(0);
+                var1 = reads.get(0);
                 VarsCount var2 = reads.get(1);
                 if (var1.varStart >= var2.varStart){
                     key = var1.varStart + "_" + var1.varEnd + "_" + var2.varStart + "_" + var2.varEnd;
@@ -130,12 +133,18 @@ public class Variation {
                 }
             }else{
                 this.single++;
-                key = reads.get(0).varStart + "_" + reads.get(0).varEnd;
+                var1 = reads.get(0);
+                key = var1.varStart + "_" + var1.varEnd;
                 if (!singleReadKey.containsKey(key)){
                     singleReadKey.put(key, 1);
                 }else{
                    singleReadKey.put(key, singleReadKey.get(key) + 1); 
                 }
+            }
+            if (var1.F1R2){
+                this.F1R2++;
+            }else if (var1.F2R1){
+                this.F2R1++;
             }
         }
         for (Map.Entry<String, Integer> entry1 : singleReadKey.entrySet()) {
@@ -153,6 +162,7 @@ public class Variation {
             }
         }
         this.varsCounts = null;
+        
     }
     /**
      * Decrement count for direction

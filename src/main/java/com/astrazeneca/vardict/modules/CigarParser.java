@@ -1787,6 +1787,9 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
         int mate_start = record.getMateAlignmentStart();
         int var_start =  record.getAlignmentStart();
         int var_end = record.getAlignmentEnd();
+        // strand of the query (false for forward; true for reverse strand).
+        boolean isReverse = record.getReadNegativeStrandFlag();
+        boolean isFirstOfPair = record.getFirstOfPairFlag();
         // Cigar mateCigar;
         // if (record.getAttribute("MC") == null){
         //     mateCigar = record.getCigar();
@@ -1798,6 +1801,18 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
         // varsCount.readName = record.getReadName();
         varsCount.varStart = var_start;
         varsCount.varEnd = var_end;
+        // varsCount.isReverse = isReverse;
+        // varsCount.isFirstOfPair = isFirstOfPair;
+
+        if (isReverse && isFirstOfPair){
+            varsCount.F2R1 = true;
+        }else if (!isReverse && isFirstOfPair) {
+            varsCount.F1R2 = true;
+        }else if (isReverse && !isFirstOfPair) {
+            varsCount.F1R2 = true;
+        }else if (!isReverse && !isFirstOfPair) {
+            varsCount.F2R1 = true;
+        }
         // varsCount.varMateStart = mate_start;
         // varsCount.varMateEnd = mate_end;
         // varsCount.isDup = isDuplicate;

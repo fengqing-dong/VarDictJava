@@ -44,7 +44,7 @@ public class AmpliconOutputVariant extends OutputVariant {
 
     private double pvalue;
     private String oddratio = "0";
-    private String dup_paired_info = "0|0|0|0|0|0";
+    private String dup_paired_info = "0|0|0|0|0|0|0|0";
 
     public AmpliconOutputVariant(Variant variant, Region region, List<Tuple.Tuple2<Variant, String>> goodVariants,
                                  List<Tuple.Tuple2<Variant, String>> badVariants, int position, int gvscnt,

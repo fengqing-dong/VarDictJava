@@ -186,11 +186,11 @@ public class SomaticPostProcessModule implements BiConsumer<Scope<AlignedVarsDat
                     varForPrint.totalPosCoverage = tcov;
                     varForPrint.refForwardCoverage = rfc;
                     varForPrint.refReverseCoverage = rrc;
-                    varForPrint.dup_paired_info = "0|0|0|0|0|0";
+                    varForPrint.dup_paired_info = "0|0|0|0|0|0|0|0";
                 } else if (v2.referenceVariant != null) {
                     varForPrint = v2.referenceVariant;
                     // 避免将v2.referenceVariant的dup_paired_info输出为配对样中该突变的dup_paired_info，故将其置为0
-                    varForPrint.dup_paired_info = "0|0|0|0|0|0";
+                    varForPrint.dup_paired_info = "0|0|0|0|0|0|0|0";
                 } else {
                     varForPrint = null;
                 }

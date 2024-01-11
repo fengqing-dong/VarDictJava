@@ -399,7 +399,7 @@ public class ToVarsBuilder implements Module<RealignedVariationData, AlignedVars
                 tvref.hicnt = hicnt;
                 tvref.hicov = hicov;
                 tvref.duprate = duprate;
-                tvref.dup_paired_info = cnt.paired + "|" + cnt.single + "|" + cnt.dup_paired + "|" + cnt.uniq_paired + "|" + cnt.dup_single + "|" + cnt.uniq_single;
+                tvref.dup_paired_info = cnt.paired + "|" + cnt.single + "|" + cnt.dup_paired + "|" + cnt.uniq_paired + "|" + cnt.dup_single + "|" + cnt.uniq_single+ "|" + cnt.F1R2 + "|" + cnt.F2R1;
 
 
                 var.add(tvref);
@@ -484,7 +484,7 @@ public class ToVarsBuilder implements Module<RealignedVariationData, AlignedVars
             tvref.hicnt = hicnt;
             tvref.hicov = hicov;
             tvref.duprate = duprate;
-            tvref.dup_paired_info = cnt.paired + "|" + cnt.single + "|" + cnt.dup_paired + "|" + cnt.uniq_paired + "|" + cnt.dup_single + "|" + cnt.uniq_single;
+            tvref.dup_paired_info = cnt.paired + "|" + cnt.single + "|" + cnt.dup_paired + "|" + cnt.uniq_paired + "|" + cnt.dup_single + "|" + cnt.uniq_single + "|" + cnt.F1R2 + "|" + cnt.F2R1;
 
             //append variant record
             var.add(tvref);
@@ -692,7 +692,9 @@ public class ToVarsBuilder implements Module<RealignedVariationData, AlignedVars
                         startPosition += shift3;
                         endPosition += shift3;
                     }
+                    // # todo  fix here
                     //reference allele is 1 base
+                    // 应该是这个 refallele = ref.containsKey(startPosition) ? ref.get(startPosition).toString() : "";
                     refallele = ref.containsKey(position) ? ref.get(position).toString() : "";
                     //variant allele is reference base concatenated with insertion
                     varallele = refallele + descriptionString.substring(1);
