@@ -64,11 +64,13 @@ public class AmpliconMode extends AbstractMode {
                 // 执行突变检测流程
                 CompletableFuture<Scope<AlignedVarsData>> pipeline = pipeline(initialScope,
                         new DirectThreadExecutor());
-
+                // 此处改变
                 AlignedVarsData data = pipeline.join().data;
                 vars.add(data.alignedVariants);
                 ampliconNumber++;
+
             }
+            // vars.get(1).get(28034123).variants.get("+ATTCATATTCTCTGAAATCAA")
             new AmpliconPostProcessModule().process(currentRegion, vars, pos, splice, variantPrinter);
         }
     }

@@ -282,6 +282,7 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
         final int position;
         readPositionIncludingSoftClipped = 0;
         readPositionExcludingSoftClipped = 0;
+        Cigar raw_cigar = record.getCigar() ;
 
         if (instance().conf.performLocalRealignment) {
             // Modify the CIGAR for potential mis-alignment for indels at the end of reads to softclipping and let VarDict's
@@ -302,6 +303,12 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
         } else {
             position = record.getAlignmentStart();
             cigar = record.getCigar();
+        }
+
+        if (raw_cigar != record.getCigar()) {
+            System.err.printf("++++++++++++++++++++++++++++++diff cigar+++++++++++++++++++++++++++++++\n");
+            System.err.printf(raw_cigar.toString(),cigar.toString());
+            
         }
         // System.err.printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
         // System.err.printf("%s\t%s\tNM:%s\t%d\n", record.getReadName(), 
@@ -922,6 +929,9 @@ public class CigarParser implements Module<RecordPreprocessor, VariationData> {
     private int processInsertion(String querySequence, int mappingQuality, Map<Integer, Character> ref,
                                  String queryQuality, int numberOfMismatches, boolean direction, int position,
                                  int readLengthIncludeMatchingAndInsertions, int ci,  SAMRecord record) {
+        if ( record.getCigar().toString().contains("21I")){
+            System.err.printf("%s\t%s\t%s\n",record.getReadName(),record.getReadString(),record.getCigar().toString());
+        }
         // Ignore insertions right after introns at exon edge in RNA-seq
         if (skipIndelNextToIntron(cigar, ci)) {
             readPositionIncludingSoftClipped += cigarElementLength;
